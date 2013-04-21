@@ -1,5 +1,10 @@
 package personalOrganiser;
 
+/**
+ * Defines the details of a Contact object. Used to create phone contacts.
+ * @author Alexander
+ * @version 1.0
+ */
 public class Contact {
 
 	private String firstName, lastName, emailAddress, homeAddress, extraInfo;

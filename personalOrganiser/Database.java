@@ -2,6 +2,11 @@ package personalOrganiser;
 
 import java.util.ArrayList;
 
+/**
+ * Stores lists of all current {@link Appointment}, {@link Contact} and {@link TodoList} objects.
+ * @author Alexander
+ * @version 1.0
+ */
 public class Database {
 
 	private ArrayList<Contact> contacts;
