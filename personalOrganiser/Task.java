@@ -8,11 +8,12 @@ import java.util.Date;
 import personalOrganiser.PersonalOrganiserError.CharacterLimitException;
 import personalOrganiser.PersonalOrganiserError.EmptyStringException;
 import personalOrganiser.PersonalOrganiserError.IncorrectDateException;
+import personalOrganiser.PersonalOrganiserError.PastDateException;
 
 /**
  * Defines the details of a Task object. Used to create non-time specific jobs.
  * @author Jack C
- *
+ * @version 1.0
  */
 public class Task {
 	
@@ -99,9 +100,13 @@ public class Task {
 	}
 	
 	public void setDeadlineDate(String day, String month, String year)
-			throws PersonalOrganiserError.EmptyStringException, PersonalOrganiserError.IncorrectDateException, PersonalOrganiserError.PastDateException, PersonalOrganiserError.BeforeStartException
+			throws PersonalOrganiserError.IncorrectDateException, PersonalOrganiserError.PastDateException
 	{
-		this.isValidDate(day, month, year);
+		try {
+			this.isValidDate(day, month, year);
+		} catch (EmptyStringException e) {
+			return;
+		}
 		this.deadlineDate[0] = day;
 		this.deadlineDate[1] = month;
 		this.deadlineDate[2] = year;
@@ -163,7 +168,7 @@ public class Task {
 	}
 	
 	public boolean isValidDate(String day, String month, String year)
-		throws IncorrectDateException, EmptyStringException
+		throws IncorrectDateException, EmptyStringException, PastDateException
 	{
 		// Ensures all strings contain some information
 		if(year == null || month == null || day == null)
@@ -187,7 +192,7 @@ public class Task {
     	givenDateCal.setTime(givenDateSdf);
     	if (givenDateCal.before(today))
     	{
-			throw new PersonalOrganiserError().new IncorrectDateException();
+			throw new PersonalOrganiserError().new PastDateException();
     	}
     	// Returns true if both tests pass
     	return true;
