@@ -1,5 +1,7 @@
 package personalOrganiser;
 
+import java.util.ArrayList;
+
 /**
  * Defines the details of a Contact object. Used to create phone contacts.
  * @author Alexander
@@ -7,18 +9,17 @@ package personalOrganiser;
  */
 public class Contact {
 
+	public static final int CHARACTER_LIMIT = 64;
+	public static final String ILLEGAL_CHARACTERS = "#~@{})(";
 	private String firstName, lastName, emailAddress, homeAddress, extraInfo;
-	private Integer homePhone, workPhone, extraPhone;
+	private ArrayList<String[]> phoneNumbers = new ArrayList<String[]>();
 	
-	public Contact(String firstName, String lastName, String email, String address, String info, Integer homeNumber, Integer workNumber, Integer extraNumber) {
+	public Contact(String firstName, String lastName, String email, String address, String info) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = email;
 		this.homeAddress = address;
 		this.extraInfo = info;
-		this.homePhone = homeNumber;
-		this.workPhone = workNumber;
-		this.extraPhone = extraNumber;
 	}
 	
 	public Contact(String firstName, String lastName) {
@@ -30,7 +31,7 @@ public class Contact {
 		return this.firstName;
 	}
 	
-	public void setFirstName(String firstName) {
+	public void setFirstName(String firstName) throws PersonalOrganiserError.EmptyStringException, PersonalOrganiserError.CharacterLimitException, PersonalOrganiserError.IncorrectNameException {
 		this.firstName = firstName;
 	}
 	
@@ -38,7 +39,7 @@ public class Contact {
 		return this.lastName;
 	}
 	
-	public void setLastName(String lastName) {
+	public void setLastName(String lastName) throws PersonalOrganiserError.EmptyStringException, PersonalOrganiserError.CharacterLimitException, PersonalOrganiserError.IncorrectNameException {
 		this.lastName = lastName;
 	}
 	
@@ -66,33 +67,57 @@ public class Contact {
 		this.extraInfo = extraInfo;
 	}
 	
-	public String getHomePhone() {
-		return "" + this.homePhone;
+	public String getPhoneNumber(String key) {
+		for (int index = 0; index < this.phoneNumbers.size(); index++) {
+			if (this.phoneNumbers.get(index)[0].equals(key)) {
+				return this.phoneNumbers.get(index)[1];
+			}
+		}
+		return null;
 	}
 	
-	public void setHomePhone(Integer homePhone) {
-		this.homePhone = homePhone;
+	public void addPhoneNumber(String phoneNumber, String key)
+				throws PersonalOrganiserError.CharacterLimitException, PersonalOrganiserError.InvalidNumberException {
+		if (key == null || key.equals("")) {
+			this.addPhoneNumber(phoneNumber);
+		} else if (key.length() > CHARACTER_LIMIT) {
+			throw new PersonalOrganiserError().new CharacterLimitException();
+		} else {
+			if (phoneNumber != null && phoneNumber.length() != 0) {
+				if (phoneNumber.length() > CHARACTER_LIMIT) {
+					throw new PersonalOrganiserError().new CharacterLimitException();
+				} else if (!this.isANumber(phoneNumber)) {
+					throw new PersonalOrganiserError().new InvalidNumberException();
+				} else {
+					this.phoneNumbers.add(new String[]{key, phoneNumber});
+				}
+			}
+		}
 	}
 	
-	public String getWorkPhone() {
-		return "" + this.workPhone;
+	public void addPhoneNumber(String phoneNumber) throws PersonalOrganiserError.CharacterLimitException, PersonalOrganiserError.InvalidNumberException {
+		if (phoneNumber != null && phoneNumber.length() != 0) {
+			if (phoneNumber.length() > CHARACTER_LIMIT) {
+				throw new PersonalOrganiserError().new CharacterLimitException();
+			} else if (!this.isANumber(phoneNumber)) {
+				throw new PersonalOrganiserError().new InvalidNumberException();
+			} else {
+				this.phoneNumbers.add(new String[]{"Phone " + (this.phoneNumbers.size() + 1), phoneNumber});
+			}
+		}
 	}
 	
-	public void setWorkPhone(Integer workPhone) {
-		this.workPhone = workPhone;
-	}
-	
-	public String getExtraPhone() {
-		return "" + this.extraPhone;
-	}
-	
-	public void setExtraPhone(Integer extraPhone) {
-		this.extraPhone = extraPhone;
+	public boolean isANumber(String string) {
+		for (int index = 0; index < string.length(); index++) {
+			if (!Character.isDigit(string.charAt(index))) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public String toString() {
 		return ("Name: " + this.firstName + " " + this.lastName + "\nEmail: " + this.emailAddress +
-				"\nHome Phone: " + this.homePhone + "\nWork Phone: " + this.workPhone + "\nOther Phone: " + this.extraPhone +
 				"\nAddress: " + this.homeAddress + "\nInfo: " + this.extraInfo);
 	}
 }

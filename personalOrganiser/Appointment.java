@@ -1,9 +1,14 @@
 package personalOrganiser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Defines the details of an Appointment object. Used to create time specific events.
- * @author Alexander
- * @version 1.0
+ * @author Alexander, Jack
+ * @version 1.1
  */
 public class Appointment {
 	public static final int CHARACTER_LIMIT = 64;
@@ -117,11 +122,6 @@ public class Appointment {
 		return this.description;
 	}
 	
-	public void isValidDate(String day, String month, String year)
-			throws PersonalOrganiserError.EmptyStringException, PersonalOrganiserError.IncorrectDateException {
-		
-	}
-	
 	public boolean isBiggerThanOrEqualTo(String stringSubject, String stringComparedTo) {
 		if (stringSubject.length() < stringComparedTo.length()) {
 			return false;
@@ -184,4 +184,35 @@ public class Appointment {
 			throw new PersonalOrganiserError().new CharacterLimitException();
 		}
 	}
+	
+	public boolean isValidDate(String day, String month, String year)
+			throws PersonalOrganiserError.IncorrectDateException, PersonalOrganiserError.EmptyStringException
+		{
+			// Ensures all strings contain some information
+			if(year == null || month == null || day == null)
+			{
+				throw new PersonalOrganiserError().new EmptyStringException();
+			}
+			// Checks if the date is possible using a SimpleDateFormat object
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			sdf.setLenient(false);
+			String combinedDate = day + "/" + month + "/" + year;
+			Date givenDateSdf;
+			try {
+				givenDateSdf = sdf.parse(combinedDate);
+			} catch (ParseException e) {
+				throw new PersonalOrganiserError().new IncorrectDateException();
+			}
+			// Checks if the date is today or after using a Calendar object
+	    	Calendar today = Calendar.getInstance();
+	    	Calendar givenDateCal = Calendar.getInstance();
+	    	today.getTime();
+	    	givenDateCal.setTime(givenDateSdf);
+	    	if (givenDateCal.before(today))
+	    	{
+				throw new PersonalOrganiserError().new IncorrectDateException();
+	    	}
+	    	// Returns true if both tests pass
+	    	return true;
+		}
 }
