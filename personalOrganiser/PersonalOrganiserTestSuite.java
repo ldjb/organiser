@@ -10,7 +10,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version 1.0
  */
 @RunWith(Suite.class)
-@SuiteClasses({AppointmentTest.class, ContactTest.class, TodoTest.class})
+@SuiteClasses({AppointmentTest.class, ContactTest.class, TodoTest.class, DatabaseTest.class})
 public class PersonalOrganiserTestSuite {
 	
 }

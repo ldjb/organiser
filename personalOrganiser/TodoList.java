@@ -42,4 +42,12 @@ public class TodoList {
 			System.err.println("No Such Task Exists");
 		}
 	}
+	
+	public String toString() {
+		String temp = "";
+		for (int index = 0; index < this.tasks.size(); index++) {
+			temp += this.tasks.get(index).toString() + "\n";
+		}
+		return temp;
+	}
 }

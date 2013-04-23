@@ -197,5 +197,9 @@ public class Task {
     	// Returns true if both tests pass
     	return true;
 	}
+	
+	public String toString() {
+		return "Title: " + this.title + "\nDescription: " + this.description + "\nDeadline : " + this.getDeadlineDate() + "\nCategory: " + this.category;
+	}
 }
 
